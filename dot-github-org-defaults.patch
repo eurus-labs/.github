@@ -1,0 +1,403 @@
+From 7727f93f0983a6414ad2d26341ef2d8c61a850b3 Mon Sep 17 00:00:00 2001
+From: Eurus <56497078+Eurus7895@users.noreply.github.com>
+Date: Thu, 8 Oct 2026 02:59:48 +0000
+Subject: [PATCH 1/2] feat: add organization profile and community health
+ defaults
+
+GitHub applies community health files from an organization's public
+.github repository to every repository that lacks its own, and shows
+profile/README.md on the organization page.
+
+Add the profile, a contributing guide (branches, Conventional Commits,
+no-reply commit identity, no tool attribution), a security policy that
+routes reports to private vulnerability reporting, bug and feature
+issue forms, and a pull request template that keeps the why, the
+changes, the decisions and the validation apart.
+---
+ .github/ISSUE_TEMPLATE/bug_report.yml      | 44 ++++++++++++++++++++++
+ .github/ISSUE_TEMPLATE/feature_request.yml | 23 +++++++++++
+ .github/pull_request_template.md           | 15 ++++++++
+ CONTRIBUTING.md                            | 38 +++++++++++++++++++
+ README.md                                  | 18 ++++++++-
+ SECURITY.md                                | 23 +++++++++++
+ profile/README.md                          | 13 +++++++
+ 7 files changed, 173 insertions(+), 1 deletion(-)
+ create mode 100644 .github/ISSUE_TEMPLATE/bug_report.yml
+ create mode 100644 .github/ISSUE_TEMPLATE/feature_request.yml
+ create mode 100644 .github/pull_request_template.md
+ create mode 100644 CONTRIBUTING.md
+ create mode 100644 SECURITY.md
+ create mode 100644 profile/README.md
+
+diff --git a/.github/ISSUE_TEMPLATE/bug_report.yml b/.github/ISSUE_TEMPLATE/bug_report.yml
+new file mode 100644
+index 0000000..37455fe
+--- /dev/null
++++ b/.github/ISSUE_TEMPLATE/bug_report.yml
+@@ -0,0 +1,44 @@
++name: Bug report
++description: Something does not work as documented.
++labels: [bug]
++body:
++  - type: markdown
++    attributes:
++      value: >-
++        To report a security vulnerability, do not open an issue: use **Report a vulnerability**
++        in this repository's Security tab.
++  - type: textarea
++    id: what-happened
++    attributes:
++      label: What happened
++      description: What you did, what you expected, and what happened instead.
++    validations:
++      required: true
++  - type: textarea
++    id: steps
++    attributes:
++      label: Steps to reproduce
++      placeholder: |
++        1.
++        2.
++        3.
++    validations:
++      required: true
++  - type: input
++    id: version
++    attributes:
++      label: Version
++      description: The release, extension version or commit you used.
++    validations:
++      required: true
++  - type: input
++    id: environment
++    attributes:
++      label: Environment
++      description: Operating system, and the version of the host application if any (for example VS Code or the Copilot CLI).
++  - type: textarea
++    id: logs
++    attributes:
++      label: Logs
++      description: Error messages or log output. Remove tokens, paths and anything else private first.
++      render: text
+diff --git a/.github/ISSUE_TEMPLATE/feature_request.yml b/.github/ISSUE_TEMPLATE/feature_request.yml
+new file mode 100644
+index 0000000..dbac5a9
+--- /dev/null
++++ b/.github/ISSUE_TEMPLATE/feature_request.yml
+@@ -0,0 +1,23 @@
++name: Feature request
++description: Propose a new capability or a change in behavior.
++labels: [enhancement]
++body:
++  - type: textarea
++    id: problem
++    attributes:
++      label: Problem
++      description: What you are trying to do, and what gets in the way today.
++    validations:
++      required: true
++  - type: textarea
++    id: proposal
++    attributes:
++      label: Proposal
++      description: What you would like to happen. A sketch or example helps.
++    validations:
++      required: true
++  - type: textarea
++    id: alternatives
++    attributes:
++      label: Alternatives considered
++      description: Workarounds you use now, or other approaches and why they fall short.
+diff --git a/.github/pull_request_template.md b/.github/pull_request_template.md
+new file mode 100644
+index 0000000..e3c3a14
+--- /dev/null
++++ b/.github/pull_request_template.md
+@@ -0,0 +1,15 @@
++## Why
++
++<!-- The problem or need this solves. Link the issue: Fixes #123. -->
++
++## Changes
++
++<!-- What changed, by file or area. Reviewers read the diff for the details. -->
++
++## Decisions and assumptions
++
++<!-- Choices you made and the alternatives you rejected; anything you assumed but did not verify. Delete if none. -->
++
++## Validation
++
++<!-- The commands you ran and what they showed, what you checked by hand, and what remains unverified. -->
+diff --git a/CONTRIBUTING.md b/CONTRIBUTING.md
+new file mode 100644
+index 0000000..4fb88e2
+--- /dev/null
++++ b/CONTRIBUTING.md
+@@ -0,0 +1,38 @@
++# Contributing
++
++This guide applies to every eurus-labs repository that has no `CONTRIBUTING.md` of its own. A repository's
++`README.md` and `AGENTS.md` add the rules specific to it, such as how to build and test.
++
++## Before you start
++
++- For a small fix, open a pull request directly.
++- For anything larger (a new feature, a changed behavior, a refactor across files), open an issue first
++  so the approach can be agreed before you spend time on it.
++- To report a vulnerability, do not open an issue: follow [SECURITY.md](SECURITY.md).
++
++## Branches
++
++Name branches `<type>/<area>-<outcome>` in lowercase kebab-case, where `<type>` is one of `feat`, `fix`,
++`docs`, `refactor`, `test`, `build`, `ci` or `chore`. The name says what the branch changes, for example
++`fix/history-dangling-lanes`. Avoid vague words, bare ticket numbers and dates.
++
++## Commits
++
++- Follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/): a lowercase type
++  and optional scope, then an imperative subject of at most 72 characters with no trailing period, for
++  example `fix(review): keep findings after a reload`.
++- Use the body, wrapped at 72 columns, to explain why the change is needed.
++- Mark a breaking change with both `!` after the type and a `BREAKING CHANGE:` footer.
++- Commit with your GitHub no-reply address (`<id>+<login>@users.noreply.github.com`), not a private
++  email: these repositories are public.
++- You are the author of what you submit, whatever tools helped you write it. Do not add AI or tool
++  attribution: no tool `Co-Authored-By` trailers, session links or "Generated with" footers.
++
++## Pull requests
++
++- Keep each pull request to one change, based on the latest default branch.
++- Fill in the pull request template: why, what changed, the decisions you made, and how you validated it.
++- Add tests for features and bug fixes, including the failure case, and run the repository's checks
++  before you push.
++- If the repository has a `CHANGELOG.md`, add a user-facing entry under the upcoming version.
++- CI must pass before review. A maintainer reviews and merges.
+diff --git a/README.md b/README.md
+index a46ae92..157fdcc 100644
+--- a/README.md
++++ b/README.md
+@@ -1 +1,17 @@
+-# .github
+\ No newline at end of file
++# .github
++
++Organization-wide defaults for [eurus-labs](https://github.com/eurus-labs).
++
++| File | What GitHub does with it |
++| ---- | ------------------------ |
++| [`profile/README.md`](profile/README.md) | Shows it on the organization's profile page. |
++| [`CONTRIBUTING.md`](CONTRIBUTING.md) | Links it from new issues and pull requests in every repository without its own. |
++| [`SECURITY.md`](SECURITY.md) | Uses it as the security policy of every repository without its own. |
++| [`.github/ISSUE_TEMPLATE/`](.github/ISSUE_TEMPLATE/) | Offers these issue forms in every repository without its own `ISSUE_TEMPLATE` folder. |
++| [`.github/pull_request_template.md`](.github/pull_request_template.md) | Pre-fills new pull requests in every repository without its own template. |
++
++A repository's own file always wins: these defaults only fill gaps. Skills, for example, has its own
++`CONTRIBUTING.md`, so the one here does not apply there.
++
++Agent instructions (`AGENTS.md`) and CI workflows are not inherited from this repository. New
++repositories get them from [Template](https://github.com/eurus-labs/Template).
+diff --git a/SECURITY.md b/SECURITY.md
+new file mode 100644
+index 0000000..ef4129d
+--- /dev/null
++++ b/SECURITY.md
+@@ -0,0 +1,23 @@
++# Security policy
++
++This policy applies to every eurus-labs repository that has no `SECURITY.md` of its own.
++
++## Reporting a vulnerability
++
++Do not open a public issue, discussion or pull request for a vulnerability.
++
++Report it privately: open the repository's **Security** tab and choose **Report a vulnerability**. This
++creates a private advisory that only you and the maintainers can see.
++
++Please include:
++
++- the affected repository and version (release tag, extension version or commit);
++- what an attacker can do, and under which conditions;
++- the steps or a minimal proof of concept to reproduce it.
++
++The maintainers will acknowledge the report in the advisory, keep you updated there, and credit you
++when the fix is published unless you ask not to be.
++
++## Supported versions
++
++Security fixes go into the latest release of each project. Upgrade to it to receive them.
+diff --git a/profile/README.md b/profile/README.md
+new file mode 100644
+index 0000000..95f5ac2
+--- /dev/null
++++ b/profile/README.md
+@@ -0,0 +1,13 @@
++# eurus-labs
++
++Tools for developers: Git workflows across repositories, agent skills for AI coding assistants, and
++desktop utilities.
++
++| Project | What it is |
++| ------- | ---------- |
++| [Repository-Manager](https://github.com/eurus-labs/Repository-Manager) | A VS Code extension for Git workflows across a parent repository and its submodules, from one dashboard, with Copilot reviews. |
++| [Skills](https://github.com/eurus-labs/Skills) | Agent Skills for GitHub Copilot and other skills-compatible agents, grouped into installable plugins. |
++| [SimpleExplorer](https://github.com/eurus-labs/SimpleExplorer) | A fast, multi-pane file explorer for Windows, built with Neutralinojs. |
++
++Want to help? Read [how to contribute](https://github.com/eurus-labs/.github/blob/main/CONTRIBUTING.md).
++To report a vulnerability, follow the [security policy](https://github.com/eurus-labs/.github/blob/main/SECURITY.md).
+-- 
+2.43.0
+
+
+From 4d832e67bc3f2204d897c3bb2dd0a8bd3150ee9d Mon Sep 17 00:00:00 2001
+From: Eurus <56497078+Eurus7895@users.noreply.github.com>
+Date: Thu, 8 Oct 2026 03:51:59 +0000
+Subject: [PATCH 2/2] feat: add a reusable commits workflow and a Renovate
+ preset
+
+Every repository carried its own copy of the commit checks, so a fix
+had to be repeated in each. Repositories now call one reusable
+workflow, pinned by tag, and keep a local verify job so the ruleset
+can still require a plain "verify" check.
+
+The Renovate preset enables only the Copier manager, so Renovate opens
+a pull request when Template is tagged while Dependabot keeps handling
+packages. The identity check accepts [bot] no-reply addresses, which
+Renovate commits with.
+---
+ .github/workflows/commits.yml | 86 +++++++++++++++++++++++++++++++++++
+ README.md                     |  6 ++-
+ renovate-config.json          | 10 ++++
+ 3 files changed, 100 insertions(+), 2 deletions(-)
+ create mode 100644 .github/workflows/commits.yml
+ create mode 100644 renovate-config.json
+
+diff --git a/.github/workflows/commits.yml b/.github/workflows/commits.yml
+new file mode 100644
+index 0000000..8326155
+--- /dev/null
++++ b/.github/workflows/commits.yml
+@@ -0,0 +1,86 @@
++name: commits
++
++# Reusable check for every eurus-labs repository: Conventional Commits subjects, no AI or
++# tool attribution, and GitHub no-reply identities. Repositories call it with
++#
++#   jobs:
++#     commits:
++#       uses: eurus-labs/.github/.github/workflows/commits.yml@v1
++#
++# and keep their own `verify` job with `needs: [commits, ...]`: a called workflow's
++# checks are named "<caller job> / <job>", so the gate must live in the caller for the
++# ruleset to keep requiring a plain "verify". It also runs on this repository's own PRs.
++on:
++  workflow_call:
++  pull_request:
++    types: [opened, edited, reopened, synchronize]
++
++permissions:
++  contents: read
++
++jobs:
++  conventional-commits:
++    # Dependabot writes its own titles, which can run past 72 characters. Only it is
++    # exempt: any other bot or app is checked like a person.
++    if: github.event.pull_request.user.login != 'dependabot[bot]'
++    runs-on: ubuntu-latest
++    steps:
++      - uses: actions/checkout@v4
++        with:
++          fetch-depth: 0
++
++      - name: Check the title, commit messages and attribution
++        env:
++          # Passed through the environment, never interpolated into the script:
++          # whoever opens the pull request writes these.
++          PR_TITLE: ${{ github.event.pull_request.title }}
++          PR_BODY: ${{ github.event.pull_request.body }}
++          BASE_SHA: ${{ github.event.pull_request.base.sha }}
++          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
++        run: |
++          pattern='^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\([a-z0-9][a-z0-9._/-]*\))?!?: [^[:space:]](.*[^.[:space:]])?$'
++          attribution='^co-authored-by:.*(claude|copilot|codex|chatgpt|anthropic|openai)|^claude-session:|generated[- ](with|by):? .*(claude|copilot|codex)|claude\.ai/code'
++          # The human user's GitHub no-reply address; the repository is public, so a
++          # private email must never land in history.
++          noreply='^[0-9]+\+[A-Za-z0-9-]+(\[bot\])?@users\.noreply\.github\.com$'
++          status=0
++
++          # Here-strings, not pipes: Actions runs this with pipefail, and grep -q exiting
++          # early on a long input would turn a match into a failed pipeline.
++          check_subject() {  # $1 names the source, $2 is the subject
++            if ! grep -Eq "$pattern" <<< "$2"; then
++              echo "::error::$1 is not a Conventional Commits subject (type(scope): imperative subject, no trailing period): $2"
++              status=1
++            elif [ "${#2}" -gt 72 ]; then
++              echo "::error::$1 has ${#2} characters; the limit is 72: $2"
++              status=1
++            fi
++          }
++
++          check_subject "The pull request title" "$PR_TITLE"
++          if grep -Eiq "$attribution" <<< "$PR_TITLE"$'\n'"$PR_BODY"; then
++            echo "::error::The pull request title or description carries AI or tool attribution; remove it."
++            status=1
++          fi
++
++          for sha in $(git rev-list --no-merges "$BASE_SHA..$HEAD_SHA"); do
++            check_subject "Commit ${sha:0:7}" "$(git log -1 --format=%s "$sha")"
++            if grep -Eiq "$attribution" <<< "$(git log -1 --format=%B "$sha")"; then
++              echo "::error::Commit ${sha:0:7} carries AI or tool attribution; reword it without the trailer or footer."
++              status=1
++            fi
++            author_email=$(git log -1 --format=%ae "$sha")
++            committer_email=$(git log -1 --format=%ce "$sha")
++            if ! grep -Eq "$noreply" <<< "$author_email"; then
++              echo "::error::Commit ${sha:0:7} author email is not a GitHub no-reply address (<id>+<login>@users.noreply.github.com)."
++              status=1
++            fi
++            # GitHub itself commits web edits as noreply@github.com; anything else must
++            # be the author.
++            if [ "$committer_email" != "$author_email" ] && [ "$committer_email" != noreply@github.com ]; then
++              echo "::error::Commit ${sha:0:7} committer email differs from the author's; both must be the same user."
++              status=1
++            fi
++          done
++
++          exit "$status"
+diff --git a/README.md b/README.md
+index 157fdcc..b7fdb9b 100644
+--- a/README.md
++++ b/README.md
+@@ -9,9 +9,11 @@ Organization-wide defaults for [eurus-labs](https://github.com/eurus-labs).
+ | [`SECURITY.md`](SECURITY.md) | Uses it as the security policy of every repository without its own. |
+ | [`.github/ISSUE_TEMPLATE/`](.github/ISSUE_TEMPLATE/) | Offers these issue forms in every repository without its own `ISSUE_TEMPLATE` folder. |
+ | [`.github/pull_request_template.md`](.github/pull_request_template.md) | Pre-fills new pull requests in every repository without its own template. |
++| [`.github/workflows/commits.yml`](.github/workflows/commits.yml) | Reusable check that repositories call: Conventional Commits, no AI or tool attribution, GitHub no-reply identities. Tag releases `v1`, `v1.1.0`… |
++| [`renovate-config.json`](renovate-config.json) | Shared Renovate preset: opens a pull request in each repository when Template publishes a new tag (`"extends": ["github>eurus-labs/.github:renovate-config"]`). |
+ 
+ A repository's own file always wins: these defaults only fill gaps. Skills, for example, has its own
+ `CONTRIBUTING.md`, so the one here does not apply there.
+ 
+-Agent instructions (`AGENTS.md`) and CI workflows are not inherited from this repository. New
+-repositories get them from [Template](https://github.com/eurus-labs/Template).
++Agent instructions are not inherited from this repository. Repositories get the shared rules from
++[Template](https://github.com/eurus-labs/Template) through Copier, and Renovate keeps them current.
+diff --git a/renovate-config.json b/renovate-config.json
+new file mode 100644
+index 0000000..a1ffe25
+--- /dev/null
++++ b/renovate-config.json
+@@ -0,0 +1,10 @@
++{
++  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
++  "description": "Shared Renovate preset for eurus-labs: keep each repository in step with eurus-labs/Template through Copier. Dependabot keeps handling package updates.",
++  "enabledManagers": ["copier"],
++  "semanticCommits": "enabled",
++  "semanticCommitType": "chore",
++  "semanticCommitScope": "template",
++  "commitMessageTopic": "eurus-labs/Template",
++  "labels": ["template"]
++}
+-- 
+2.43.0
+

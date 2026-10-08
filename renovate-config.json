@@ -1,0 +1,10 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Shared Renovate preset for eurus-labs: keep each repository in step with eurus-labs/Template through Copier. Dependabot keeps handling package updates.",
+  "enabledManagers": ["copier"],
+  "semanticCommits": "enabled",
+  "semanticCommitType": "chore",
+  "semanticCommitScope": "template",
+  "commitMessageTopic": "eurus-labs/Template",
+  "labels": ["template"]
+}

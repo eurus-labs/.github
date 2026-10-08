@@ -1,0 +1,44 @@
+name: Bug report
+description: Something does not work as documented.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        To report a security vulnerability, do not open an issue: use **Report a vulnerability**
+        in this repository's Security tab.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: The release, extension version or commit you used.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Operating system, and the version of the host application if any (for example VS Code or the Copilot CLI).
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Error messages or log output. Remove tokens, paths and anything else private first.
+      render: text
